@@ -6,3 +6,16 @@
 //
 
 import Foundation
+
+
+class ServiceFactory {
+    
+    static var dataService: DataServiceProtocol {
+        let dataService = DataService(networkConfig: NetworkConfig())
+        return dataService
+    }
+    
+    static var newsApiService: NewsApiProtocol {
+        return NewsApiService(dataService: dataService)
+    }
+}
