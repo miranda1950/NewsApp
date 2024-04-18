@@ -20,9 +20,6 @@ final class TopNewsViewController: UIViewController {
         addCallbacks()
         
         viewModel.loadNews()
-//        { [weak self] in
-//            self?.tableView.reloadData()
-//        }
         
     }
     
@@ -31,10 +28,19 @@ final class TopNewsViewController: UIViewController {
         let titleLabel = UILabel()
         titleLabel.text = "Top News"
         titleLabel.numberOfLines = 2
-        titleLabel.style(.headline1, alignment: .left)
-        titleLabel.textColor = .white
+        titleLabel.style(.headline1,color: .darkRed ,alignment: .left)
         view.addSubview(titleLabel)
         return titleLabel
+    }()
+    
+    private lazy var settingsButton: UIButton = {
+        let button = UIButton()
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold)
+        let largeBoldIcon = UIImage(systemName: "line.3.horizontal.circle", withConfiguration: largeConfig)?.withTintColor(.darkRed, renderingMode: .alwaysOriginal)
+        button.setImage(largeBoldIcon, for: .normal)
+        button.addTarget(self, action: #selector(settingsTapped), for: .touchUpInside)
+        view.addSubview(button)
+        return button
     }()
     
     
@@ -47,6 +53,7 @@ final class TopNewsViewController: UIViewController {
         tableView.backgroundView = nil
         tableView.backgroundColor = UIColor.clear
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         view.addSubview(tableView)
         return tableView
     }()
@@ -59,6 +66,16 @@ final class TopNewsViewController: UIViewController {
         return activityIndicator
     }()
     
+    private lazy var noInternetView: NoResultsView = {
+        let noInternetView = NoResultsView()
+        noInternetView.type = .noInternet
+        noInternetView.isUserInteractionEnabled = true
+        noInternetView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(checkInternetConnection)))
+        noInternetView.isHidden = true
+        view.addSubview(noInternetView)
+        return noInternetView
+    }()
+    
 }
 
 
@@ -68,9 +85,14 @@ extension TopNewsViewController {
         
         titleLabel.anchor(top: (view.safeAreaLayoutGuide.topAnchor, 12), leading: (view.leadingAnchor, 20), trailing: (view.trailingAnchor, 20))
         
+        settingsButton.anchor( trailing: (view.trailingAnchor, 20))
+        settingsButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor).isActive = true
+        
         tableView.anchor(top: (titleLabel.bottomAnchor, 12),bottom: (view.safeAreaLayoutGuide.bottomAnchor, 20) ,leading: (view.safeAreaLayoutGuide.leadingAnchor, 20), trailing: (view.safeAreaLayoutGuide.trailingAnchor, 20))
         
         activityIndicator.centerIn(view)
+        
+        noInternetView.anchor(top: (titleLabel.bottomAnchor, 12),bottom: (view.safeAreaLayoutGuide.bottomAnchor, 20) ,leading: (view.leadingAnchor, 20), trailing: (view.trailingAnchor, 20))
     }
     
     private func addCallbacks() {
@@ -86,13 +108,30 @@ extension TopNewsViewController {
             self?.tableView.reloadData()
         }
         
+        viewModel.onNoInternet = { [weak self] in
+            self?.noInternetView.isHidden = false
+            self?.tableView.isHidden = true
+        }
+    }
+    
+    @objc private func settingsTapped() {
+        viewModel.showHamburgerModal?()
+    }
+    
+    @objc private func checkInternetConnection() {
+        viewModel.reloadData()
+        guard !viewModel.article.isEmpty else {
+            return
+        }
+        self.noInternetView.isHidden = true
+        self.tableView.isHidden = false
+        self.tableView.reloadData()
     }
 }
 
 extension TopNewsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("mirantotal\(viewModel.article.count)")
         return viewModel.article.count
     }
     

@@ -19,13 +19,11 @@ final class DetailsViewModel {
     var newsImage: URL {
         
         guard let urlString = article.urlToImage, !urlString.isEmpty else {
-                // Return a placeholder URL here
-            return Article.defaultImage
+            return UIImage.defaultImage
             }
         
         guard let url = URL(string: urlString) else {
-              
-            return Article.defaultImage
+            return UIImage.defaultImage
            }
         
         return url

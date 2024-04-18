@@ -60,4 +60,10 @@ extension UIView {
         centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: constants.x).isActive = true
         centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: constants.y).isActive = true
     }
+    
+    func centerXInSuperview() {
+        guard let superview = superview else { return }
+        translatesAutoresizingMaskIntoConstraints = false
+        centerXAnchor.constraint(equalTo: superview.centerXAnchor).isActive = true
+    }
 }

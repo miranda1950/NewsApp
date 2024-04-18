@@ -93,9 +93,6 @@ public class DataService: DataServiceProtocol {
     
     
 private func handle<T>(_ response: JsonResponse, whenFetching resource: Resource<T>, completion: (ServiceResult<T>)->Void) {
-    
-    print("handle\(response)")
-    print("res\(resource)")
     let response: DataResponse<Any> = self.interceptors.reduce(response) { response, interceptor in
         interceptor.intercept(response)
     }
@@ -184,19 +181,16 @@ private func handle<T>(_ response: JsonResponse, whenFetching resource: Resource
             guard let `self` = self else { return }
          
             let path = resource.path.hasPrefix("http") ? resource.path : self.networkConfig.baseURL + resource.path
-            print("miranpah\(path)")
             if let arrayParams = resource.arrayParams {
                 var request = Alamofire.request( path,
                                                 method: HTTPMethod(resource.method),
                                                 parameters: arrayParams.asParameters(),
                                                 encoding: Alamofire.DataRequest.encoding(from: resource.encoding),
                                                 headers: headers)
-                
+               
                 for interceptor in self.interceptors {
                     request = interceptor.intercept(request)
                 }
-                
-                print("miranpah\(request)")
                 
                 completion(request)
             } else {
@@ -210,8 +204,7 @@ private func handle<T>(_ response: JsonResponse, whenFetching resource: Resource
                 for interceptor in self.interceptors {
                     request = interceptor.intercept(request)
                 }
-                
-                print("reqmiran\(request)")
+
                 completion(request)
             }
         }

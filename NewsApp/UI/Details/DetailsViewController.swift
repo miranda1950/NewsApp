@@ -22,10 +22,10 @@ final class DetailsViewController: UIViewController {
     private lazy var newsImage: UIImageView = {
         let newsImage = UIImageView()
         newsImage.setImage(with: viewModel.newsImage, placeholder: UIImage.placeholderImage!)
-        newsImage.contentMode = .scaleAspectFill
+        newsImage.contentMode = .scaleToFill
         
         newsImage.layer.cornerRadius = 8
-           newsImage.clipsToBounds = true
+        newsImage.clipsToBounds = true
         view.addSubview(newsImage)
         return newsImage
     }()
@@ -73,7 +73,7 @@ final class DetailsViewController: UIViewController {
     
     private lazy var authorLabel: UILabel = {
         let authorLabel = UILabel()
-        authorLabel.numberOfLines = 1
+        authorLabel.numberOfLines = 2
         authorLabel.text = "Author: \(viewModel.author)"
         authorLabel.style(.headline4, color: .darkRed, alignment: .left)
         containerView.addSubview(authorLabel)
@@ -81,12 +81,10 @@ final class DetailsViewController: UIViewController {
     }()
 }
 
-
 extension DetailsViewController {
     
     private func setupView() {
         view.backgroundColor = .black
-//        self.navigationController?.isNavigationBarHidden = true
     }
     
     private func setupConstraints() {
@@ -102,9 +100,9 @@ extension DetailsViewController {
         
         containerView.anchor(size: CGSize(width: view.frame.width, height: 0))
         
-        descriptionLabel.anchor(top: (containerView.topAnchor, 8),bottom: (containerView.safeAreaLayoutGuide.bottomAnchor, 0),leading: (containerView.leadingAnchor, 12), trailing: (containerView.trailingAnchor, 12))
+        descriptionLabel.anchor(top: (containerView.topAnchor, 8),leading: (containerView.leadingAnchor, 12), trailing: (containerView.trailingAnchor, 12))
         
-        authorLabel.anchor(top: (descriptionLabel.bottomAnchor, 8), leading: (descriptionLabel.leadingAnchor, 0), trailing: (descriptionLabel.trailingAnchor, 0))
+        authorLabel.anchor(top: (descriptionLabel.bottomAnchor, 8),bottom: (containerView.bottomAnchor,8) ,leading: (containerView.leadingAnchor, 12), trailing: (containerView.trailingAnchor, 12))
         
     }
 }

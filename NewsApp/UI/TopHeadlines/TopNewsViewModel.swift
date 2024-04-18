@@ -14,6 +14,8 @@ final class TopNewsViewModel {
     var onGotData:EmptyCallback?
     var onStartedActivty: EmptyCallback?
     var onEndedActivity: EmptyCallback?
+    var showHamburgerModal: EmptyCallback?
+    var onNoInternet: EmptyCallback?
     
     var newsData: NewsResponse?
     var article: [Article] = []
@@ -71,8 +73,10 @@ extension TopNewsViewModel {
                 self.isFetchingData = false
             case .failure(let error):
                 print("Failure getting data\(error)")
+                self.onNoInternet?()
                 self.onEndedActivity?()
                 self.isFetchingData = false
+                
             }
         }
     }

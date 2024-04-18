@@ -28,6 +28,10 @@ extension TopNewsCoordinator {
             self?.goToDetails(article)
         }
         
+        vm.showHamburgerModal = { [weak self] in
+            self?.showHamburgerView()
+        }
+        
         vc.tabBarItem = UITabBarItem(title: "Headlines", image:UIImage(systemName: "newspaper"), selectedImage: UIImage(systemName: "newspaper.fill"))
         
         
@@ -41,5 +45,12 @@ extension TopNewsCoordinator {
         vc.viewModel = vm
         
         navigationController.pushViewController(vc, animated: true)
+    }
+    
+    private func showHamburgerView() {
+        let vc = HamburgerViewController()
+        
+        vc.modalPresentationStyle = .overFullScreen
+        navigationController.present(vc, animated: false)
     }
 }
