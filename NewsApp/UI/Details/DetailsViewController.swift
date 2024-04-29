@@ -16,6 +16,7 @@ final class DetailsViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupConstraints()
+//        setup
     }
     
     
